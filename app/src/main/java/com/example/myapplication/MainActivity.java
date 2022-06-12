@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,25 +12,27 @@ import android.os.VibrationEffect;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity  extends AppCompatActivity  implements mimshak{
+
 
     final int DELAY = 1000;
+    private int currentDelay;
     private final int numOfLanes=3;
     private final int numOfObstaclesInLane=4;
     private int obstaclesFlags[];
     private int carsFlags[];
     private int numOfLifes=3;
     private boolean newFlag;
+    private final int TICKSCORE = 10;
+    private Bundle bundle; //New
     private ImageView panel_IMG_left_arrow;
     private ImageView panel_IMG_right_arrow;
     private ImageView[] booms;
@@ -36,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
     private ImageView[] obstacles;
     private ImageView[] cars;
     private ImageView[] hearts;
+    private int currentScore=0;
+    private TextView score;
+    private MediaPlayer mpCrush;//New
+    private String speedString;
+
 
 
 
@@ -45,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("pttt", "Tick: " + 1);
             for (int i = 0; i < booms.length; i++) {
                 if(booms[i].getVisibility()==View.VISIBLE) {
-                    booms[i].setVisibility(View.GONE);
+                    booms[i].setVisibility(View.INVISIBLE);
                     cars[i].setVisibility(View.VISIBLE);
                 }
             }
@@ -55,22 +64,24 @@ public class MainActivity extends AppCompatActivity {
             else
                 newFlag=true;
             checkCrush();
-
-            handler.postDelayed(this, DELAY);
+            increaseScore(TICKSCORE);
+            handler.postDelayed(this, currentDelay);
         }
     };
-
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.bundle = getIntent().getBundleExtra("BUNDLE_KEY");
         setContentView(R.layout.activity_main);
 
+
+        speedString = bundle.getString("speedKey");
+
+        mpCrush = MediaPlayer.create(this, R.raw.sound_car_crush);
         newFlag=true;
         findViews();
-
         obstaclesFlags = new int[obstacles.length];
         carsFlags = new int[cars.length];
         Arrays.fill(obstaclesFlags,0);
@@ -92,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void leftArrowAction() {
+    public void leftArrowAction() {
         for (int i = 0; i < cars.length; i++) {
             if(cars[i].getVisibility()==View.VISIBLE)
                 carsFlags[i]=1;
@@ -101,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 1; i < carsFlags.length; i++) {
             if(carsFlags[i]==1){
-                cars[i].setVisibility(View.GONE);
+                cars[i].setVisibility(View.INVISIBLE);
                 cars[i-1].setVisibility(View.VISIBLE);
             }
         }
@@ -109,7 +120,13 @@ public class MainActivity extends AppCompatActivity {
         checkCrush();
     }
 
-    private void rightArrowAction() {
+    private void increaseScore(int up) {
+        currentScore+=up;
+        score.setText(currentScore+"m");
+    }
+
+
+    public void rightArrowAction() {
         for (int i = 0; i < cars.length; i++) {
             if(cars[i].getVisibility()==View.VISIBLE)
                 carsFlags[i]=1;
@@ -117,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < carsFlags.length-1 ; i++) {
             if(carsFlags[i]==1) {
-                cars[i].setVisibility(View.GONE);
+                cars[i].setVisibility(View.INVISIBLE);
                 cars[i + 1].setVisibility(View.VISIBLE);
             }
         }
@@ -129,13 +146,14 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < numOfLanes; i++) {
             if(cars[i].getVisibility()==View.VISIBLE && obstacles[i*numOfObstaclesInLane+numOfLanes].getVisibility()==View.VISIBLE){
                 booms[i].setVisibility(View.VISIBLE);
-                cars[i].setVisibility(View.GONE);
-                obstacles[i*numOfObstaclesInLane+numOfLanes].setVisibility(View.GONE);
+                cars[i].setVisibility(View.INVISIBLE);
+                obstacles[i*numOfObstaclesInLane+numOfLanes].setVisibility(View.INVISIBLE);
                 Toast.makeText(this, "CRUSH!", Toast.LENGTH_SHORT).show();
                 decreseLife();
                 Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vibrator.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+                    mpCrush.start();
                 }
 
             }
@@ -143,20 +161,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void decreseLife() {
-        hearts[numOfLifes-1].setVisibility(View.GONE);
+        hearts[numOfLifes-1].setVisibility(View.INVISIBLE);
         numOfLifes--;
         if(numOfLifes<1){
-            numOfLifes=3;
-            for (int i = 0; i < numOfLifes; i++) {
-                hearts[i].setVisibility(View.VISIBLE);
-            }
+            gameOver();
+//            numOfLifes=3;
+//            for (int i = 0; i < numOfLifes; i++) {
+//                hearts[i].setVisibility(View.VISIBLE);
+//            }
         }
+    }
+
+    private void gameOver() {
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        handler.postDelayed(r, DELAY);
+        Log.d("pttt", "speedString= " + speedString);
+        if(speedString != null){
+            if(speedString.contains("fast"))
+                currentDelay = 500;
+            else if(speedString.contains("slow"))
+                currentDelay =2000;
+        }
+        else
+            currentDelay =1500;
+        handler.postDelayed(r, currentDelay);
+
     }
 
     @Override
@@ -164,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         handler.removeCallbacks(r);
     }
+
 
     private void moveObstacles() {
         for (int i = 0; i < obstacles.length; i++) {
@@ -179,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 if (i != numOfObstaclesInLane - 1 && (i - numOfObstaclesInLane < 0 || i % numOfObstaclesInLane != 3)) {
                     obstacles[i + 1].setVisibility(View.VISIBLE);
                 }
-                obstacles[i].setVisibility(View.GONE);
+                obstacles[i].setVisibility(View.INVISIBLE);
             }
         }
         Arrays.fill(obstaclesFlags,0);
@@ -194,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void findViews() {
+        score = findViewById(R.id.panel_LBL_score);
         panel_IMG_left_arrow = findViewById(R.id.panel_IMG_left_arrow);
         panel_IMG_right_arrow = findViewById(R.id.panel_IMG_right_arrow);
         roads = new ImageView[]{

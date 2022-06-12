@@ -42,6 +42,24 @@
             android:layout_marginStart="8dp"
 
             android:src="@drawable/img_heart" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAllCaps="true"
+            android:text="score: "
+            android:layout_gravity="center"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/panel_LBL_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:text="0"
+            android:textAllCaps="false"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -295,6 +313,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             android:src="@drawable/img_left_arrow" />
+
 
 
 

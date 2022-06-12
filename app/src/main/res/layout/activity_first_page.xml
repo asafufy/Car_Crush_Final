@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".FirstPage">
+
+
+    <TextView
+        android:id="@+id/tv111"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/welcome_to_car_crush"
+        android:textColor="@color/black"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.298"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <Button
+        android:id="@+id/start_BTN_play"
+        android:layout_width="175dp"
+        android:layout_height="53dp"
+        android:text="play"
+        app:layout_constraintBottom_toTopOf="@+id/settings_RAD_group"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv111"
+        app:layout_constraintVertical_bias="0.131"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/btn20"
+        android:layout_width="178dp"
+        android:layout_height="54dp"
+        android:text="Make conntact"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv111"
+        app:layout_constraintVertical_bias="0.231"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/profile"
+        android:layout_width="175dp"
+        android:layout_height="53dp"
+        android:text="Profile"
+        app:layout_constraintBottom_toTopOf="@+id/settings_RAD_group"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv111"
+        app:layout_constraintVertical_bias="0.818"
+        tools:ignore="MissingConstraints" />
+
+    <RadioGroup
+        android:id="@+id/settings_RAD_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn20"
+        tools:ignore="MissingConstraints">
+
+        <RadioButton
+            android:id="@+id/settings_RAD_buttons_slow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buttons mode slow"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv111"
+            tools:ignore="HardcodedText,MissingConstraints" />
+
+        <RadioButton
+            android:id="@+id/settings_RAD_buttons_fast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buttons mode fast"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settings_RAD_buttons_slow"
+            app:layout_constraintVertical_bias="0.107"
+            tools:ignore="HardcodedText,MissingConstraints" />
+
+    </RadioGroup>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
