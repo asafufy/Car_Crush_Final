@@ -78,7 +78,7 @@ public class FirstPage extends AppCompatActivity{
         startActivity(myIntent);
     }
     private void goprofile() {
-        if(bundle1.isEmpty()){
+        if(bundle1.getString("nameKey") == null){
             bundle1.putString("nameKey","No name setted");
         }
         Intent myIntent7 = new Intent(this, MainActivity2.class);
